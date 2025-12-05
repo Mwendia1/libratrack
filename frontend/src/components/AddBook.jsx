@@ -1,65 +1,41 @@
 import { useState } from "react";
 
-export default function AddBook({ onBookAdded }) {
-  const [form, setForm] = useState({ title: "", author: "" });
+function AddBook({ addBook }) {
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
+  function handleSubmit(e) {
     e.preventDefault();
 
-    try {
-      const res = await fetch("http://127.0.0.1:8000/books/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify(form),
-      });
+    const newBook = { title, author };
 
-      if (!res.ok) {
-        const errBody = await res.json().catch(() => ({}));
-        const msg = errBody.detail || errBody || `HTTP ${res.status}`;
-        throw new Error(msg);
-      }
+    fetch("http://127.0.0.1:8000/books", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newBook),
+    })
+      .then(res => res.json())
+      .then(data => addBook(data));
 
-      const data = await res.json();
-      alert(`Book "${data.title}" added!`);
-      setForm({ title: "", author: "" });
-      if (onBookAdded) onBookAdded(data);
-    } catch (err) {
-      console.error(err);
-      alert("Error adding book. Check console for details.");
-    }
-  };
+    setTitle("");
+    setAuthor("");
+  }
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>➕ Add New Book</h2>
-      <form onSubmit={handleSubmit} style={styles.form}>
-        <input
-          name="title"
-          placeholder="Book Title"
-          value={form.title}
-          onChange={handleChange}
-        />
-        <input
-          name="author"
-          placeholder="Author"
-          value={form.author}
-          onChange={handleChange}
-        />
-        <button type="submit">Add</button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <input
+        value={title}
+        placeholder="Book title"
+        onChange={e => setTitle(e.target.value)}
+      />
+      <input
+        value={author}
+        placeholder="Author"
+        onChange={e => setAuthor(e.target.value)}
+      />
+      <button type="submit">Add</button>
+    </form>
   );
 }
 
-const styles = {
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "10px",
-    width: "250px",
-  },
-};
+export default AddBook;

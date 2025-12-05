@@ -1,35 +1,27 @@
 import { useEffect, useState } from "react";
-import BookCard from "../components/BookCard";
+import BookList from "../components/BookList";
+import AddBook from "../components/AddBook";
 
-export default function Books() {
+function Books() {
   const [books, setBooks] = useState([]);
 
   useEffect(() => {
-    fetch("https://openlibrary.org/search.json?q=the+hobbit")
-      .then((res) => res.json())
-      .then((data) => {
-        setBooks(data.docs); // <-- fix here
-      })
-      .catch((err) => console.error("Error fetching books:", err));
+    fetch("http://127.0.0.1:8000/books")
+      .then(res => res.json())
+      .then(data => setBooks(data));
   }, []);
+
+  function addBook(newBook) {
+    setBooks([...books, newBook]);
+  }
 
   return (
     <div style={{ padding: "20px" }}>
-      <h2>📘 All Books</h2>
-      <div style={styles.grid}>
-        {books.map((book, index) => (
-          <BookCard key={book.key || index} book={book} />
-        ))}
-
-      </div>
+      <h2>Books</h2>
+      <AddBook addBook={addBook} />
+      <BookList books={books} />
     </div>
   );
 }
 
-const styles = {
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-    gap: "20px",
-  },
-};
+export default Books;

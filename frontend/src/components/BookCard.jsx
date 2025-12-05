@@ -1,17 +1,10 @@
-export default function BookCard({ book }) {
+function BookCard({ book }) {
   return (
-    <div style={styles.card}>
+    <div style={{ padding: "10px", border: "1px solid #ccc", marginTop: "10px" }}>
       <h3>{book.title}</h3>
       <p>Author: {book.author}</p>
-      <p>Status: {book.is_borrowed ? "Borrowed" : "Available"}</p>
     </div>
   );
 }
 
-const styles = {
-  card: {
-    border: "1px solid #ddd",
-    borderRadius: "8px",
-    padding: "15px",
-  },
-};
+export default BookCard;

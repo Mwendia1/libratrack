@@ -1,22 +1,24 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Books from "./components/Books";
-import AddBook from "./components/AddBook";
-import Members from "./components/Members";
-import Borrow from "./components/Borrow";
-//import Register from "./pages/register";  // Capitalized
+import Home from "./pages/Home";
+import Books from "./pages/Books";
+import Members from "./pages/Members";
+import Borrow from "./pages/Borrow";
+import Register from "./pages/Register";
 
-export default function App() {
+function App() {
   return (
     <BrowserRouter>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Books />} />
-        <Route path="/add" element={<AddBook />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/books" element={<Books />} />
         <Route path="/members" element={<Members />} />
         <Route path="/borrow" element={<Borrow />} />
-        
+        <Route path="/register" element={<Register />} />
       </Routes>
     </BrowserRouter>
   );
 }
+
+export default App;
