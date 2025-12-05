@@ -1,10 +1,35 @@
-function BookCard({ book }) {
+export default function BookCard({ book, remote=false, onSave, onLike, onToggleFavorite, onRate, savedBooks=[] }) {
+  const saved = savedBooks.some(b => b.title === book.title && b.author === book.author);
+
   return (
-    <div style={{ padding: "10px", border: "1px solid #ccc", marginTop: "10px" }}>
-      <h3>{book.title}</h3>
-      <p>Author: {book.author}</p>
+    <div style={{ border: "1px solid #ddd", padding: 12, margin: 8, borderRadius: 6, background: "#fff" }}>
+      <h4>{book.title}</h4>
+      <p style={{ margin: 0 }}>{book.author || "Unknown"}</p>
+      {book.published_year ? <small>Year: {book.published_year}</small> : null}
+      <div style={{ marginTop: 8, display: "flex", gap: 8 }}>
+        {remote ? (
+          <button onClick={() => onSave && onSave(book)} disabled={saved}>
+            {saved ? "Saved" : "Save"}
+          </button>
+        ) : null}
+
+        {/* For both remote (if saved) and local savedBooks */}
+        {book.id ? (
+          <>
+            <button onClick={() => onLike && onLike(book.id)}>❤️ {book.likes ?? 0}</button>
+            <button onClick={() => onToggleFavorite && onToggleFavorite(book.id)}>
+              {book.is_favorite ? "💛 Unfav" : "🤍 Fav"}
+            </button>
+            <div>
+              {[1,2,3,4,5].map(n => (
+                <span key={n} onClick={() => onRate && onRate(book.id, n)} style={{ cursor: "pointer", marginLeft: 6 }}>
+                  {n <= Math.round(book.rating || 0) ? "★" : "☆"}
+                </span>
+              ))}
+            </div>
+          </>
+        ) : null}
+      </div>
     </div>
   );
 }
-
-export default BookCard;

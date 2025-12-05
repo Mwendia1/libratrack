@@ -1,41 +1,39 @@
 import { useState } from "react";
+const BACKEND = "http://127.0.0.1:8000";
 
-function AddBook({ addBook }) {
+export default function AddBook({ onAdded }) {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
+  const [year, setYear] = useState("");
 
-  function handleSubmit(e) {
+  function submit(e) {
     e.preventDefault();
-
-    const newBook = { title, author };
-
-    fetch("http://127.0.0.1:8000/books", {
+    const payload = {
+      title,
+      author,
+      published_year: year ? Number(year) : null,
+      copies: 1,
+      likes: 0,
+      rating: 0,
+      rating_count: 0,
+      is_favorite: false
+    };
+    fetch(`${BACKEND}/books`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newBook),
-    })
-      .then(res => res.json())
-      .then(data => addBook(data));
-
-    setTitle("");
-    setAuthor("");
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify(payload)
+    }).then(r => r.json()).then(() => {
+      setTitle(""); setAuthor(""); setYear("");
+      onAdded && onAdded();
+    }).catch(console.error);
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        value={title}
-        placeholder="Book title"
-        onChange={e => setTitle(e.target.value)}
-      />
-      <input
-        value={author}
-        placeholder="Author"
-        onChange={e => setAuthor(e.target.value)}
-      />
-      <button type="submit">Add</button>
+    <form onSubmit={submit} style={{ marginBottom: 12 }}>
+      <input placeholder="Title" value={title} onChange={e=>setTitle(e.target.value)} required />
+      <input placeholder="Author" value={author} onChange={e=>setAuthor(e.target.value)} />
+      <input placeholder="Year" value={year} onChange={e=>setYear(e.target.value)} />
+      <button type="submit">Add Book</button>
     </form>
   );
 }
-
-export default AddBook;
