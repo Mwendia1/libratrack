@@ -10,13 +10,15 @@ function App() {
   return (
     <BrowserRouter>
       <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/books" element={<Books />} />
-        <Route path="/members" element={<Members />} />
-        <Route path="/borrow" element={<Borrow />} />
-        <Route path="/register" element={<Register />} />
-      </Routes>
+      <div style={{ maxWidth: 900, margin: "0 auto" }}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/books" element={<Books />} />
+          <Route path="/members" element={<Members />} />
+          <Route path="/borrow" element={<Borrow />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </div>
     </BrowserRouter>
   );
 }

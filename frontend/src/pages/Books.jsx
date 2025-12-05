@@ -6,7 +6,7 @@ function Books() {
   const [books, setBooks] = useState([]);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/books")
+    fetch("https://openlibrary.org/search.json?q=the+hobbit")
       .then(res => res.json())
       .then(data => setBooks(data));
   }, []);
