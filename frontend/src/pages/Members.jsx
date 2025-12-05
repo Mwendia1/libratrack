@@ -1,23 +1,19 @@
 import { useEffect, useState } from "react";
 import MemberCard from "../components/MemberCard";
 
-function Members() {
+const BACKEND = "http://127.0.0.1:8000";
+
+export default function Members() {
   const [members, setMembers] = useState([]);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/members")
-      .then(res => res.json())
-      .then(data => setMembers(data));
+    fetch(`${BACKEND}/members`).then(r => r.json()).then(setMembers).catch(console.error);
   }, []);
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div style={{ padding: 20 }}>
       <h2>Members</h2>
-      {members.map(member => (
-        <MemberCard key={member.id} member={member} />
-      ))}
+      {members.map(m => <MemberCard key={m.id} member={m} />)}
     </div>
   );
 }
-
-export default Members;
