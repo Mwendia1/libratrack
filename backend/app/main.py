@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse
 from app.routers import books, members, borrow, dashboard
 from app.database import Base, engine
 from app import models
+import os
 
 app = FastAPI(
     title="Library Management System API",
@@ -12,7 +13,9 @@ app = FastAPI(
 )
 
 # ========== CORS CONFIGURATION ==========
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 origins = [
+    "https://libratrack-teal.vercel.app/"
     "http://localhost:5173",
     "http://localhost:3000",
     "http://127.0.0.1:5173",

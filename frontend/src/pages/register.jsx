@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-const BACKEND = "http://localhost:8000/api";  // CHANGED
+import { API_URL } from "../config";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -58,7 +57,7 @@ export default function Register() {
     setLoading(true);
     
     try {
-      const response = await fetch(`${BACKEND}/members`, {
+      const response = await fetch(`${API_URL}/api/members`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData)

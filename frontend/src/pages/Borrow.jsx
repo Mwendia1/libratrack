@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-
-const BACKEND = "http://localhost:8000";
+import { API_URL } from "../config";
 
 export default function Borrow() {
   const [searchParams] = useSearchParams();
@@ -24,21 +23,21 @@ export default function Borrow() {
   }, [searchParams]);
 
   const fetchBookDetails = (bookId) => {
-    fetch(`${BACKEND}/api/books/${bookId}`)
+    fetch(`${API_URL}/api/books/${bookId}`)
       .then(r => r.json())
       .then(data => setSelectedBook(data))
       .catch(console.error);
   };
 
   const fetchMembers = () => {
-    fetch(`${BACKEND}/api/members`)
+    fetch(`${API_URL}/api/members`)
       .then(r => r.json())
       .then(setMembers)
       .catch(console.error);
   };
 
   const fetchAvailableBooks = () => {
-    fetch(`${BACKEND}/api/books`)
+    fetch(`${API_URL}/api/books`)
       .then(r => r.json())
       .then(data => {
         const availableBooks = data.filter(book => book.available_copies > 0);
@@ -56,7 +55,7 @@ export default function Borrow() {
 
     setLoading(true);
     try {
-      const response = await fetch(`${BACKEND}/api/borrow`, {
+      const response = await fetch(`${API_URL}/api/borrow`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 

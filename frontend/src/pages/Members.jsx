@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import MemberCard from "../components/MemberCard";
-
-const BACKEND = "http://localhost:8000/api";  // CHANGED
+import { API_URL } from "../config";
 
 export default function Members() {
   const [members, setMembers] = useState([]);
@@ -15,7 +14,7 @@ export default function Members() {
 
   const fetchMembers = () => {
     setLoading(true);
-    fetch(`${BACKEND}/members`)
+    fetch(`${API_URL}/api/members`)
       .then(r => {
         if (!r.ok) throw new Error(`HTTP error! status: ${r.status}`);
         return r.json();
@@ -27,7 +26,7 @@ export default function Members() {
       .catch(error => {
         console.error("Error fetching members:", error);
         setLoading(false);
-        alert("Failed to fetch members. Make sure backend is running on http://localhost:8000");
+        alert(`Failed to fetch members. Make sure backend is running at ${API_URL}`);
       });
   };
 
@@ -54,7 +53,7 @@ export default function Members() {
 
   const handleActivationToggle = async (memberId, currentStatus) => {
     try {
-      const response = await fetch(`${BACKEND}/members/${memberId}`, {
+      const response = await fetch(`${API_URL}/api/members/${memberId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ is_active: !currentStatus })

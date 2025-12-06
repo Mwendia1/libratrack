@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import BookList from "../components/BookList";
 import AddBook from "../components/AddBook";
+import { API_URL } from "../config";
 
-const BACKEND = "http://localhost:8000";
 
 
 function Books() {
@@ -21,7 +21,7 @@ function Books() {
     setLoading(true);
     setError("");
     try {
-      const response = await fetch(`${BACKEND}/api/books`);
+      const response = await fetch(`${API_URL}/api/books`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -29,7 +29,7 @@ function Books() {
       setSavedBooks(data);
     } catch (error) {
       console.error("Error fetching books:", error);
-      setError("Failed to fetch books. Make sure backend is running on http://localhost:8000");
+      setError(`Failed to fetch books. Make sure backend is running at ${API_URL}`);
     } finally {
       setLoading(false);
     }

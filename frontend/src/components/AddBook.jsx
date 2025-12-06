@@ -1,5 +1,5 @@
 import { useState } from "react";
-const BACKEND = "http://localhost:8000/api";  // CHANGED
+import { API_URL } from "../config";
 
 export default function AddBook({ onAdded }) {
   const [title, setTitle] = useState("");
@@ -18,7 +18,7 @@ export default function AddBook({ onAdded }) {
       rating_count: 0,
       is_favorite: false
     };
-    fetch(`${BACKEND}/books`, {
+    fetch(`${API_URL}/api/books`, {
       method: "POST",
       headers: {"Content-Type":"application/json"},
       body: JSON.stringify(payload)

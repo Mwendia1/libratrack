@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-
-const BACKEND = "http://localhost:8000/api";  // CHANGED
+import { API_URL } from "../config";
 
 export default function MemberCard({ member }) {
   const [borrows, setBorrows] = useState([]);
@@ -16,7 +15,7 @@ export default function MemberCard({ member }) {
   const fetchMemberBorrows = async () => {
     setLoadingBorrows(true);
     try {
-      const response = await fetch(`${BACKEND}/members/${member.id}/borrows`);
+      const response = await fetch(`${API_URL}/api/members/${member.id}/borrows`);
       if (response.ok) {
         const data = await response.json();
         setBorrows(data);
