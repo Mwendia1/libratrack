@@ -1,12 +1,8 @@
-# app/main.py - CORRECTED VERSION
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from app.routers import books, members, borrow, dashboard
-
-# Import the Base from database, not redeclare it
 from app.database import Base, engine
-
-# Import models to ensure they're registered
 from app import models
 
 app = FastAPI(
@@ -16,16 +12,22 @@ app = FastAPI(
 )
 
 # ========== CORS CONFIGURATION ==========
+origins = [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:3000",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Your React dev server
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
 # ========== CREATE TABLES ==========
-# This should be here, not in models
 Base.metadata.create_all(bind=engine)
 
 # ========== INCLUDE ROUTERS ==========
@@ -50,3 +52,11 @@ def health_check():
 @app.get("/api/test")
 def test_endpoint():
     return {"message": "API test endpoint is working!"}
+
+# ========== ERROR HANDLING ==========
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    return JSONResponse(
+        status_code=500,
+        content={"detail": f"Internal server error: {str(exc)}"}
+    )

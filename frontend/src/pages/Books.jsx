@@ -4,32 +4,35 @@ import AddBook from "../components/AddBook";
 
 const BACKEND = "http://localhost:8000";
 
+
 function Books() {
   const [query, setQuery] = useState("");
   const [remoteBooks, setRemoteBooks] = useState([]);
   const [savedBooks, setSavedBooks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     fetchSaved();
   }, []);
 
-  const fetchSaved = () => {
+  const fetchSaved = async () => {
     setLoading(true);
-    fetch(`${BACKEND}/api/books`)
-      .then(r => {
-        if (!r.ok) throw new Error(`HTTP error! status: ${r.status}`);
-        return r.json();
-      })
-      .then(data => {
-        setSavedBooks(data);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error("Error fetching books:", error);
-        setLoading(false);
-      });
+    setError("");
+    try {
+      const response = await fetch(`${BACKEND}/api/books`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setSavedBooks(data);
+    } catch (error) {
+      console.error("Error fetching books:", error);
+      setError("Failed to fetch books. Make sure backend is running on http://localhost:8000");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const searchOpenLibrary = (q) => {
