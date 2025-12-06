@@ -10,5 +10,13 @@ services:
           name: libratrack-db
           property: connectionString
       - key: FRONTEND_URL
-        value: https://libratrack.vercel.app  # Your Vercel URL
+        value: https://libratrack.vercel.app
     healthCheckPath: /health
+    autoDeploy: true
+
+databases:
+  - name: libratrack-db
+    region: oregon
+    databaseName: libratrack
+    user: libratrack_user
+    plan: free
