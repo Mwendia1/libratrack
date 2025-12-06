@@ -1,74 +1,87 @@
-# schemas.py
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, EmailStr
 from typing import Optional
 from datetime import datetime
 
-
-class MemberBase(BaseModel):
-    name: str = Field(..., example="Alice")
-    email: Optional[str] = Field(None, example="alice@example.com")
-    phone: Optional[str] = Field(None, example="+254712345678")
-
-class MemberCreate(MemberBase):
-    pass
-
-class MemberUpdate(BaseModel):
-    name: Optional[str] = None
-    email: Optional[str] = None
-    phone: Optional[str] = None
-
-class MemberOut(MemberBase):
-    id: int
-    class Config:
-        orm_mode = True
-
-
+# Book schemas
 class BookBase(BaseModel):
-    title: str = Field(..., example="The Hobbit")
-    author: Optional[str] = Field(None, example="J. R. R. Tolkien")
-    published_year: Optional[int] = Field(None, example=1937)
-    cover_id: Optional[int] = Field(None, example=82345)
-    copies: Optional[int] = Field(1, ge=0, example=1)
+    title: str
+    author: str
+    published_year: Optional[int] = None
+    isbn: Optional[str] = None
+    copies: int = 1
+    cover_id: Optional[str] = None
 
 class BookCreate(BookBase):
-    likes: Optional[int] = 0
-    rating: Optional[float] = 0.0
-    rating_count: Optional[int] = 0
-    is_favorite: Optional[bool] = False
+    pass
 
 class BookUpdate(BaseModel):
     title: Optional[str] = None
     author: Optional[str] = None
     published_year: Optional[int] = None
-    cover_id: Optional[int] = None
-    copies: Optional[int] = Field(None, ge=0)
+    copies: Optional[int] = None
     is_favorite: Optional[bool] = None
 
-class BookOut(BookBase):
+class Book(BookBase):
     id: int
+    available_copies: int
     likes: int
     rating: float
     rating_count: int
     is_favorite: bool
+    
     class Config:
-        orm_mode = True
+        from_attributes = True
 
+# Member schemas
+class MemberBase(BaseModel):
+    name: str
+    email: Optional[EmailStr] = None
+    phone: Optional[str] = None
+    address: Optional[str] = None
 
+class MemberCreate(MemberBase):
+    pass
+
+class MemberUpdate(MemberBase):
+    is_active: Optional[bool] = None
+
+class Member(MemberBase):
+    id: int
+    join_date: datetime
+    is_active: bool
+    
+    class Config:
+        from_attributes = True
+
+# Borrow schemas
 class BorrowBase(BaseModel):
-    member_id: int
     book_id: int
+    member_id: int
 
 class BorrowCreate(BorrowBase):
     pass
 
 class BorrowReturn(BaseModel):
-    return_date: Optional[datetime] = None
+    returned: bool = True
 
-class BorrowOut(BaseModel):
+class Borrow(BorrowBase):
     id: int
-    member_id: int
-    book_id: int
     borrow_date: datetime
-    return_date: Optional[datetime] = None
+    return_date: Optional[datetime]
+    due_date: datetime
+    returned: bool
+    
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+class BorrowWithDetails(Borrow):
+    book: Book
+    member: Member
+
+# Dashboard stats
+class DashboardStats(BaseModel):
+    total_books: int
+    total_members: int
+    active_borrows: int
+    overdue_borrows: int
+    available_books: int
