@@ -2,52 +2,19 @@ import { Link } from "react-router-dom";
 
 export default function Navbar() {
   return (
-    <>
-      <style>
-        {`
-          nav {
-            background: #ffffff;
-            border-bottom: 2px solid #e5e5e5;
-            padding: 14px 20px;
-            display: flex;
-            gap: 18px;
-            align-items: center;
-            font-family: Arial, sans-serif;
-          }
-
-          nav:hover {
-            background: #f8f9ff;
-            transition: background 0.3s ease;
-          }
-
-          nav a {
-            text-decoration: none;
-            font-weight: 600;
-            color: #333;
-            padding: 8px 14px;
-            border-radius: 6px;
-            letter-spacing: 0.3px;
-            transition: 0.3s ease;
-          }
-
-          nav a:hover {
-            background: #4f46e5;
-            color: white;
-          }
-
-          nav a:active {
-            transform: scale(0.96);
-          }
-        `}
-      </style>
-
-      <nav style={{ display: "flex", gap: 12, padding: 12, background: "#fff" }}>
-        <Link to="/">Home</Link>
-        <Link to="/books">Books</Link>
-        <Link to="/members">Members</Link>
-        <Link to="/borrow">Borrow</Link>
-        <Link to="/register">Register</Link>
-      </nav>
-    </>
+    <nav className="bg-blue-600 text-white shadow-lg">
+      <div className="container mx-auto px-4">
+        <div className="flex justify-between items-center py-4">
+          <Link to="/" className="text-2xl font-bold">LibraTrack</Link>
+          <div className="space-x-4">
+            <Link to="/" className="hover:text-blue-200 transition">Home</Link>
+            <Link to="/books" className="hover:text-blue-200 transition">Books</Link>
+            <Link to="/members" className="hover:text-blue-200 transition">Members</Link>
+            <Link to="/borrow" className="hover:text-blue-200 transition">Borrow</Link>
+            <Link to="/register" className="hover:text-blue-200 transition">Register</Link>
+          </div>
+        </div>
+      </div>
+    </nav>
   );
 }
