@@ -35,7 +35,7 @@ Frontend
 -pip install -r requirements.txt -uvicorn app.main:app --reload
 
 ### Live Link
-
+https://libratrack-teal.vercel.app/
 
 ### Technologies Used
 -HTML -CSS / Tailwind 
