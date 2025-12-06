@@ -1,6 +1,10 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, field_validator
 from typing import Optional
 from datetime import datetime
+import re
+
+# Email validation pattern
+EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
 
 # Book schemas
 class BookBase(BaseModel):
@@ -32,18 +36,40 @@ class Book(BookBase):
     class Config:
         from_attributes = True
 
-# Member schemas
+# Member schemas with custom email validation
 class MemberBase(BaseModel):
     name: str
-    email: Optional[EmailStr] = None
+    email: Optional[str] = None
     phone: Optional[str] = None
     address: Optional[str] = None
+    
+    @field_validator('email')
+    @classmethod
+    def validate_email(cls, v):
+        if v is None or v == "":
+            return v
+        if not EMAIL_REGEX.match(v):
+            raise ValueError('Invalid email format')
+        return v
 
 class MemberCreate(MemberBase):
     pass
 
-class MemberUpdate(MemberBase):
+class MemberUpdate(BaseModel):
+    name: Optional[str] = None
+    email: Optional[str] = None
+    phone: Optional[str] = None
+    address: Optional[str] = None
     is_active: Optional[bool] = None
+    
+    @field_validator('email')
+    @classmethod
+    def validate_email(cls, v):
+        if v is None or v == "":
+            return v
+        if not EMAIL_REGEX.match(v):
+            raise ValueError('Invalid email format')
+        return v
 
 class Member(MemberBase):
     id: int
